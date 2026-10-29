@@ -14,50 +14,32 @@
 <body>
   <div class="shell">
     <aside class="sidebar" id="sidebar">
-      <a class="brand" href="#dashboard">
-        <img src="logo-reversed.svg" alt="ÉcolePlus — Gestion scolaire">
-      </a>
+      <a class="brand" href="#dashboard"><img src="logo-reversed.svg" alt="ÉcolePlus — Gestion scolaire"></a>
       <div class="school">
         <b class="crest" id="schoolCrest">É+</b>
-        <span>
-          <strong id="schoolName">Mon établissement</strong>
-          <small id="schoolPlaceYear">Ville · Année scolaire</small>
-        </span>
+        <span><strong id="schoolName">Mon établissement</strong><small id="schoolPlaceYear">Ville · Année scolaire</small></span>
         <i>⌄</i>
       </div>
       <small class="label">ESPACE ÉTABLISSEMENT</small>
       <nav id="nav"></nav>
-      <div class="bottom">
-        <i></i>
-        <span><b>Mode local</b><small>Données sur cet appareil</small></span>
-      </div>
+      <div class="bottom"><i></i><span><b>Mode local</b><small>Données sur cet appareil</small></span></div>
       <div class="profile">
         <b id="adminInitials">AD</b>
-        <span>
-          <strong id="adminName">Administrateur</strong>
-          <small id="adminRole">Direction</small>
-        </span>
+        <span><strong id="adminName">Administrateur</strong><small id="adminRole">Direction</small></span>
       </div>
     </aside>
-
     <main>
       <header>
         <button class="hamb" id="hamb">☰</button>
         <div class="crumb">ÉcolePlus <i>/</i> <b id="crumb">Tableau de bord</b></div>
-        <div class="right">
-          <input id="search" placeholder="⌕  Rechercher…">
-          <button class="bell">♧</button>
-          <b class="user">MN</b>
-        </div>
+        <div class="right"><input id="search" placeholder="⌕  Rechercher…"><button class="bell">♧</button><b class="user">MN</b></div>
       </header>
       <section id="view"></section>
     </main>
   </div>
-
   <div id="modal"></div>
   <div id="toast"></div>
-
-  <script src="offline.js"></script>
+  <script src="cloud-sync.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
