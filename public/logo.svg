@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="272" height="58" viewBox="0 0 272 58" role="img" aria-labelledby="title desc">
+  <title id="title">ÉcolePlus</title>
+  <desc id="desc">Logo ÉcolePlus, application de gestion scolaire</desc>
+  <rect x="3" y="4" width="50" height="50" rx="15" fill="#123C35"/>
+  <path d="M13 23.5c6.3-2.1 12.8-1.1 15 1.2v17c-3-2.7-8.7-3.6-15-1.4v-16.8Zm30 0c-6.3-2.1-12.8-1.1-15 1.2v17c3-2.7 8.7-3.6 15-1.4V23.5Z" fill="none" stroke="#E7F3EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M28 24.6v17" stroke="#90C6A5" stroke-width="2" stroke-linecap="round"/>
+  <path d="m28 10.8 1.7 3.5 3.9.6-2.8 2.7.7 3.8-3.5-1.8-3.5 1.8.7-3.8-2.8-2.7 3.9-.6 1.7-3.5Z" fill="#E6B56F"/>
+  <text x="66" y="31" fill="#173D34" font-family="Manrope,Arial,sans-serif" font-size="22" font-weight="800" letter-spacing="-.7">École<tspan fill="#4B916B">Plus</tspan></text>
+  <text x="67" y="45" fill="#82938A" font-family="Arial,sans-serif" font-size="8" font-weight="700" letter-spacing="1.55">GESTION SCOLAIRE</text>
+</svg>
