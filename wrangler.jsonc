@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "ecole-plus",
+  "name": "ecoleplus",
   "main": "worker/index.js",
   "compatibility_date": "2026-10-29",
   "assets": {
@@ -13,7 +13,7 @@
     {
       "binding": "DB",
       "database_name": "ecoleplus",
-      "database_id": "00000001-00000000-00005113-661797e60821748f645499062a3addf3",
+      "database_id": "5566c3b8-16a7-4e10-8428-ed5d6cef18c5",
       "migrations_dir": "migrations"
     }
   ]
