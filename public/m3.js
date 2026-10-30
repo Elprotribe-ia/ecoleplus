@@ -1,0 +1,27 @@
+/* m3 : modules 8 et 10 (interface) */
+/* --- 8. Services : bibliothèque, cantine, transport --- */
+menu('services','Services scolaires',['secretariat','librarian']);
+P.services=()=>{const lv=all('livre'),open=all('emp').filter(x=>!x.ret),late=open.filter(x=>(Date.now()-new Date(x.date))/864e5>14),mn=all('menu').find(x=>x.date==T()),ct=all('cant'),tr=all('trs'),ln=all('ligne');
+return['Services scolaires',`<div class=grid style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start">
+<div class=card><h3>Bibliothèque</h3><p>${lv.reduce((a,x)=>a+ +x.qte,0)} ouvrages · ${open.length} emprunts en cours · <b class=red>${late.length} en retard</b></p>
+<form data-f=livre>${fld(['titre','Titre'])}${fld(['qte','Exemplaires','number'])}<p><button class="btn l">Ajouter un livre</button></p></form>
+<form data-f=emp><label>Livre</label><select name=livre>${J(lv.map(l=>`<option value=${l.id}>${E(l.titre)}</option>`))}</select>${selStu()}${fld(['date','Date du prêt','date'],{date:T()})}<p><button class=btn>Enregistrer l’emprunt</button></p></form>
+${tbl(['Livre','Élève','Date',''],open.map(x=>[E(get(x.livre)?.titre),nm(x.sid),x.date,`<button class="btn w" data-a=ret data-id=${x.id}>Retour</button>`]))}</div>
+<div class=card><h3>Cantine</h3><p>Menu du jour : ${E(mn?.plat||'—')} · <b>${ct.length} repas réservés</b></p><form data-f=menu>${fld(['date','Date','date'],{date:T()})}${fld(['plat','Plat'])}<p><button class="btn l">Enregistrer le menu</button></p></form><form data-f=cant>${selStu()}<p><button class=btn>Inscrire à la cantine</button></p></form>${tbl(['Inscrits'],ct.map(x=>[nm(x.sid)]))}</div>
+<div class=card><h3>Transport</h3><p>${ln.length} lignes · <b>${tr.length} élèves inscrits</b></p><form data-f=ligne>${fld(['nom','Ligne'])}${fld(['arrets','Arrêts'])}<p><button class="btn l">Ajouter une ligne</button></p></form><form data-f=trs>${selStu()}<label>Ligne</label><select name=ligne>${J(ln.map(l=>`<option value=${l.id}>${E(l.nom)}</option>`))}</select><p><button class=btn>Inscrire</button></p></form>${tbl(['Élève','Ligne'],tr.map(x=>[nm(x.sid),E(get(x.ligne)?.nom)]))}</div></div>`]};
+H.livre=gen('livre','Livre ajouté');H.emp=gen('emp','Emprunt enregistré');H.menu=gen('menu','Menu enregistré');H.cant=gen('cant','Élève inscrit');H.ligne=gen('ligne','Ligne ajoutée');H.trs=gen('trs','Élève inscrit');
+H2.ret=e=>save('emp',{...get(e.dataset.id),ret:T()},e.dataset.id).then(render);
+
+/* --- 10. Espace enseignant, fiche parent, journal d'activité --- */
+menu('espace','Mon espace',['teacher','secretariat','cashier','librarian']);
+P.espace=()=>{const d=DAYS[(new Date().getDay()+6)%7],mine=all('class').filter(c=>(c.prof||'').toLowerCase().includes((me.n||'#').toLowerCase())),cl=mine.length?mine:all('class'),cours=[];
+cl.forEach(c=>(c.tt||'').split('\n').forEach(l=>{const[j,m,h]=l.split('|').map(x=>x.trim());if((j||'').toLowerCase()==d)cours.push([h||'',m||'',c.nom])}));cours.sort();
+const todo=all('exam').filter(e=>Object.values(e.notes||{}).some(n=>n.s=='Brouillon')),an=all('msg').sort((a,b)=>b.date.localeCompare(a.date))[0];
+return['Mon espace',`<div class=card style="max-width:480px"><b>${E(cfg().nom)}</b><h2>Bonjour, ${E(me.n)}</h2><p class=mut>Aujourd’hui · ${cours.length} cours</p>${J(cours.map(c=>`<div class=li><b style="color:var(--g)">${E(c[0])}</b> &nbsp; ${E(c[1])} · ${E(c[2])}</div>`))}
+<div class=row style="margin:14px 0"><a class="btn" href="#/presences">Faire l’appel</a><a class="btn w" href="#/notes">Saisir les notes</a></div><h3>À faire</h3>${J(todo.map(e=>`<div>${E(e.titre)} : ${E(cls(e.classe))}, notes en brouillon</div>`))||'<p class=mut>Rien en attente.</p>'}<h3 style="margin-top:14px">Annonce</h3><p>${an?E(an.objet)+' · '+an.date:'—'}</p></div>`]};
+P.parent=id=>{const s=get(id);if(!s)return['Espace parent','<p>Élève introuvable.</p>'];const ev=all('msg').filter(m=>m.date>=T()).sort((a,b)=>a.date.localeCompare(b.date))[0],last=all('msg').sort((a,b)=>b.date.localeCompare(a.date))[0];
+return['Aperçu : espace parent',`<div class=noprint style="margin-bottom:12px"><button class=btn data-a=print>Imprimer la fiche parent</button></div><div class=card style="max-width:420px"><b>${E(cfg().nom)}</b><h2>Bonjour, ${E(s.parent?.nom)}</h2><p class=mut>${E(s.prenoms)} ${E(s.nom)} · ${E(cls(s.classe))}</p><div class=grid style="grid-template-columns:1fr 1fr"><div class="card kpi"><b>${f1(moy(id))} / 20</b>Moyenne</div><div class="card kpi"><b>${pres(id)??'—'} %</b>Présence</div></div><div class="card kpi mint" style="margin-top:12px"><b>${F(bal(s))}</b>Solde FCFA</div><h3 style="margin-top:14px">Prochain événement</h3><p>${ev?E(ev.objet)+' · '+ev.date:'—'}</p><h3>Message de l’école</h3><p>${last?E(last.texte):'—'}</p></div>`]};
+const LBL={fee:'paiement',student:'élève',staff:'personnel',heure:'heures',avance:'avance',dep:'dépense',cfg:'paramètres',disc:'discipline'};
+menu('journal','Journal d’activité',[]);
+P.journal=()=>['Journal d’activité','<div class=card><h3>Actions sensibles tracées</h3><table><tr><th>Date<th>Utilisateur<th>Action<tbody id=jr><tr><td colspan=3 class=mut>Chargement (en ligne uniquement)…</tbody></table></div>'];
+AFTER.journal=async()=>{try{const r=await fetch('/api/audit',{headers:{authorization:'Bearer '+tok}}),l=await r.json();$('#jr').innerHTML=J(l.map(x=>`<tr><td>${new Date(x.t).toLocaleString('fr-FR')}<td>${E(x.nom)}<td>${x.x?'Suppression':'Création / modification'} : ${E(LBL[x.type]||x.type)}`))}catch(e){}};
