@@ -10,7 +10,7 @@ const pub=u=>({id:u.id,n:u.nom,e:u.email,r:u.role,s:u.school});
 async function session(env,u){return{token:await sign(env,{u:u.id,s:u.school,r:u.role,exp:Date.now()+30*864e5}),user:pub(u)}}
 const ROLES=['director','secretariat','teacher','cashier','librarian'];
 // Types d'enregistrements que chaque rôle peut ÉCRIRE (le directeur peut tout écrire)
-const WR={secretariat:'student class att exam msg fee echeance mat cand disc texte conseil',teacher:'att exam msg texte conseil disc',cashier:'fee echeance dep',librarian:'livre emp menu cant ligne trs'};
+const WR={secretariat:'student class att exam msg fee echeance mat cand disc texte conseil livre emp menu cant ligne trs',teacher:'att exam msg texte conseil disc',cashier:'fee echeance dep',librarian:'livre emp menu cant ligne trs'};
 // Types qu'un rôle NE PEUT PAS lire
 const DENY={teacher:['fee','echeance','staff','heure','avance','dep'],secretariat:['staff','heure','avance','dep'],cashier:['staff','heure','avance'],librarian:['fee','echeance','staff','heure','avance','dep','disc']};
 // Types dont chaque modification est enregistrée dans le journal
