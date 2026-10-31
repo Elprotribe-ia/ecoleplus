@@ -12,7 +12,7 @@ const get=id=>S[id]&&!S[id].x?{id,...S[id].d}:null;
 async function save(type,d,id=d.id||U()){const{id:_,...x}=d,r={id,type,d:x,t:Date.now(),x:0};S[id]=r;await put('r',r);await put('o',r);sync();return id}
 async function rm(id){const r=S[id];r.x=1;r.t=Date.now();await put('r',r);await put('o',r);sync()}
 const cfg=()=>get('cfg')||{nom:'Mon établissement',frais:150000,annee:'2025–2026'};
-const studs=()=>all('student').sort((a,b)=>(a.nom||'').localeCompare(b.nom||'')),cls=id=>get(id)?.nom||'—';
+const studs=()=>all('student').filter(s=>!s.sortie).sort((a,b)=>(a.nom||'').localeCompare(b.nom||'')),cls=id=>get(id)?.nom||'—';
 const pays=sid=>all('fee').filter(f=>f.sid==sid),paid=sid=>pays(sid).reduce((a,f)=>a+ +f.montant,0),due=s=>+s.frais||+cfg().frais,bal=s=>due(s)-paid(s.id);
 const pres=sid=>{let t=0,p=0;all('att').forEach(a=>{const r=a.rows?.[sid];if(r){t++;if(r.s!='A')p++}});return t?Math.round(100*p/t):null};
 function grades(sid,tr){const m={};all('exam').forEach(e=>{const n=e.notes?.[sid];if(n&&n.n!==''&&(!tr||e.tr==tr))(m[e.matiere]??=[]).push({n:+n.n,c:+e.coef||1})});return m}
@@ -48,6 +48,7 @@ const WF=[[['nom','Nom'],['prenoms','Prénom(s)'],['naissance','Date de naissanc
 [['pnom','Nom du parent / tuteur'],['plien','Lien','select',['Mère','Père','Tuteur']],['ptel','Téléphone','tel'],['padr','Adresse']],[],
 [['montant','Montant reçu (FCFA, optionnel)','number'],['mode','Mode de paiement','select',['Espèces','Mobile money','Virement']]]];
 const PIECES=['Acte de naissance','Certificat de scolarité','Photo d’identité','Bulletin précédent'],DAYS=['lundi','mardi','mercredi','jeudi','vendredi'],TRS=['T1','T2','T3'];
+
 /* ---------- pages ---------- */
 const P={},AFTER={};
 P.dash=()=>{const s=studs(),enc=all('fee').reduce((a,f)=>a+ +f.montant,0);let t=0,p=0;all('att').filter(a=>a.date==T()).forEach(a=>Object.values(a.rows).forEach(r=>{t++;if(r.s!='A')p++}));
@@ -95,6 +96,7 @@ return['Bulletin scolaire',`<div class="row noprint" style="margin-bottom:12px">
 <div class=card><div class=row><b>${E(cfg().nom).toUpperCase()}</b><b style="text-align:right">BULLETIN DU ${TR=='T1'?'1er':TR=='T2'?'2e':'3e'} TRIMESTRE</b></div><h2>${E(s.prenoms)} ${E(s.nom.toUpperCase())}</h2><small>Classe : ${E(cls(s.classe))} · Matricule : ${E(s.mat)} · Effectif : ${eff}</small>
 <table style="margin-top:14px"><tr><th>Matière<th>Coef.<th>Note<th>Moy. classe<th>Appréciation${J(Object.entries(g).map(([k,a])=>`<tr><td>${E(k)}<td>${a[0].c}<td>${f1(avg(a))}<td>${f1(cm(s.classe,k,TR))}<td>${apr(avg(a))}`))}</table>
 <div class=row style="margin-top:18px"><div><b>Moyenne générale</b><h2 style="color:var(--g);margin:4px 0">${f1(m)} / 20</h2></div><div>Absences : ${l.filter(r=>r.s=='A').length} séance(s)<br>Retards : ${l.filter(r=>r.s=='R').length}</div><div><b>Décision du conseil</b><h3 style="color:var(--g)">${m==null?'—':m>=14?'Admis(e) · Félicitations':m>=10?'Admis(e)':'À encourager'}</h3></div></div><p style="text-align:right" class=mut>Le directeur<br>Signature et cachet</p></div>`]};
+
 P.finances=()=>{const s=studs(),enc=all('fee').reduce((a,f)=>a+ +f.montant,0),att=s.reduce((a,x)=>a+due(x),0),dues=s.filter(x=>bal(x)>0);
 return['Frais de scolarité',`<div class="row" style="margin-bottom:16px"><div class="card kpi" style="margin:0"><b>${F(att)} FCFA</b>Attendu</div><div class="card kpi" style="margin:0"><b>${F(enc)} FCFA</b>Encaissé</div><div class="card kpi" style="margin:0;background:#fdf0e6"><b class=red>${F(att-enc)} FCFA</b>Reste à payer</div><button class=btn data-a=relance>Relancer ${dues.length} familles</button></div>
 <div class=card><table><tr><th>Élève<th>Dû<th>Payé<th>Reste<th>Statut${J(s.map(x=>{const p=paid(x.id);return`<tr data-go="#/pay/${x.id}"><td>${E(x.prenoms)} ${E(x.nom)}<td>${F(due(x))}<td>${F(p)}<td>${F(due(x)-p)}<td>${due(x)-p<=0?'Soldé':p?'Partiel':'En retard'}`}))}</table></div>`]};
