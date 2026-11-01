@@ -1,0 +1,16 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Diagnostic ÉcolePlus</title>
+<body style="font:15px system-ui,sans-serif;padding:16px;max-width:760px"><h2>Diagnostic ÉcolePlus</h2><div id="o">Analyse en cours…</div>
+<script>
+const R=[['app.js',['const NAV=','const ACC=','const P={}','function render()','H2.out='],['const EXTRA','const pills','b.onclick']],
+['m1.js',['acc=(k,r)','P.fiche=','P.docs='],['const NAV=','function render()']],
+['m2.js',['_pp=P.pay','P.echeances=','P.compta='],['const NAV=','function render()']],
+['m3.js',["menu('services'",'P.espace=','AFTER.journal='],['const NAV=','function render()']],
+['ui.js',['const EXTRA','const pills','P.rapports='],['const NAV=','function render()','const H={}']],
+['sw.js',["'/ui.js'","ep-v3"],[]],['app.css',['.lg-l','.phone'],[]],['index.html',['/ui.js','/m3.js'],[]]];
+(async()=>{let h='';for(const[f,must,never]of R){let t,s,l='';try{const r=await fetch('/'+f+'?'+Date.now(),{cache:'no-store'});s=r.status;t=await r.text()}catch(e){h+=`<p>❌ <b>${f}</b> : introuvable (${e.message})</p>`;continue}
+const p=[];if(s!=200)p.push('statut '+s);const ct=t.trim().startsWith('<!doctype')&&f!='index.html';if(ct)p.push('ce n’est pas le bon fichier : la page d’accueil est renvoyée (fichier absent ou mal placé)');
+must.forEach(m=>{if(!t.includes(m))p.push('manque : '+m)});never.forEach(m=>{if(t.includes(m))p.push('contient du code qui ne doit pas y être : '+m)});
+if(f.endsWith('.js')&&!ct){try{new Function(t)}catch(e){p.push('ERREUR DE SYNTAXE : '+e.message)}}
+h+=`<p>${p.length?'❌':'✅'} <b>${f}</b> · ${t.length} caractères · ${t.split('\n').length} lignes${p.length?'<br><span style="color:#c8594d">'+p.join('<br>')+'</span>':''}<br><small style="color:#6b7785">début : ${t.slice(0,70).replace(/</g,'&lt;')}</small></p>`}
+document.getElementById('o').innerHTML=h})();
+</script></body></html>
