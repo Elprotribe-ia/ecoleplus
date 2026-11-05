@@ -1,0 +1,37 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,Arial,sans-serif;background:#f3f5f9;color:#1c2333}
+.cache{display:none!important}
+.muted{color:#6b7280;font-size:14px}
+.erreur{color:#c62828;font-size:14px;min-height:18px}
+
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:#1d3b6e}
+.login-box{background:#fff;padding:28px;border-radius:14px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px}
+.login-box h1{color:#1d3b6e;text-align:center}
+input,select{padding:12px;border:1px solid #cfd6e4;border-radius:8px;font-size:16px;width:100%}
+.btn{background:#1d3b6e;color:#fff;border:0;padding:12px 16px;border-radius:8px;font-size:16px;cursor:pointer}
+.btn-ico{background:none;border:0;font-size:18px;cursor:pointer;color:#1d3b6e}
+
+.app{display:flex;min-height:100vh}
+.menu{width:230px;background:#1d3b6e;color:#fff;padding:12px 0;position:fixed;top:0;bottom:0;left:-240px;transition:left .2s;z-index:20;overflow-y:auto}
+.menu.ouvert{left:0}
+.menu h3{padding:8px 18px 14px;font-size:18px}
+.menu a{display:block;padding:12px 18px;color:#dbe4f5;text-decoration:none;cursor:pointer}
+.menu a.actif,.menu a:hover{background:#2b5199;color:#fff}
+.main{flex:1;min-width:0}
+.top{display:flex;align-items:center;gap:10px;background:#fff;padding:10px 14px;box-shadow:0 1px 4px #0002;position:sticky;top:0}
+.top h2{flex:1;font-size:18px}
+.vue{padding:16px}
+
+.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.carte{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px #0001}
+.carte .val{font-size:28px;font-weight:700;color:#1d3b6e}
+.carte .lib{color:#6b7280;font-size:14px}
+.panneau{background:#fff;border-radius:12px;padding:18px;margin-top:14px}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 18px;border-radius:8px;z-index:50}
+
+@media(min-width:900px){
+  .menu{left:0}
+  .main{margin-left:230px}
+  #btn-menu{display:none}
+}
