@@ -31,7 +31,10 @@
     var m = UI.$('menu');
     var p = EP.DB.param();
     m.innerHTML = '';
-    m.appendChild(UI.h('div', { class: 'menu-logo' }, 'ÉcolePlus'));
+    m.appendChild(UI.h('div', { class: 'menu-logo' }, [
+      UI.h('img', { src: 'logo.svg', alt: '', class: 'logo-img' }),
+      'ÉcolePlus'
+    ]));
     m.appendChild(UI.h('div', { class: 'menu-ecole' }, p.ecole + ' ' + p.ville));
     EP.NAV.forEach(function (n) {
       m.appendChild(UI.h('a', {
