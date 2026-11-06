@@ -1,4 +1,4 @@
-/* ui.js : outils d'affichage. Chargé en 2e. */
+*/* ui.js : outils d'affichage. Chargé en 2e. */
 (function () {
   var UI = EP.UI;
 
