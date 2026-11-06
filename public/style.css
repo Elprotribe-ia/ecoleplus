@@ -17,7 +17,8 @@ button{font-family:inherit;cursor:pointer}
 /* ---------- CONNEXION ---------- */
 .login{min-height:100vh;display:grid;grid-template-columns:44% 56%}
 .login-gauche{background:var(--marine);color:#fff;padding:48px 48px 56px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
-.logo{font-family:var(--titre);font-weight:800;font-size:28px;position:relative;z-index:2}
+.logo{font-family:var(--titre);font-weight:800;font-size:28px;position:relative;z-index:2;display:flex;align-items:center;gap:12px}
+.logo-img{width:44px;height:44px;flex:none}
 .cercle{position:absolute;border-radius:50%}
 .c1{width:62%;aspect-ratio:1;background:#17876b;top:12%;left:48px}
 .c2{width:42%;aspect-ratio:1;background:#c9a24d;opacity:.55;top:30%;left:28%}
@@ -39,7 +40,8 @@ button{font-family:inherit;cursor:pointer}
 /* ---------- APPLICATION ---------- */
 .app{display:flex;min-height:100vh}
 .menu{width:217px;background:var(--marine);color:#cfd8e6;padding:28px 0;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;z-index:30;transition:transform .2s}
-.menu-logo{font-family:var(--titre);font-weight:800;font-size:24px;color:#fff;padding:0 32px}
+.menu-logo{font-family:var(--titre);font-weight:800;font-size:24px;color:#fff;padding:0 32px;display:flex;align-items:center;gap:10px}
+.menu-logo .logo-img{width:34px;height:34px}
 .menu-ecole{padding:10px 32px 28px;font-size:13px;color:#b9c5d6}
 .menu a{display:block;margin:0 13px 6px;padding:13px 18px 13px 31px;color:#c7d2e2;cursor:pointer;border-radius:2px}
 .menu a:hover{color:#fff}
