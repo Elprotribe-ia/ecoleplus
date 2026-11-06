@@ -1,63 +1,82 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ÉcolePlus</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* app.js : démarrage. Chargé EN DERNIER. */
+(function () {
+  var UI = EP.UI;
+  var courant = 'accueil';
 
-<!-- CONNEXION -->
-<div id="login" class="login">
-  <div class="login-gauche">
-    <div class="logo">ÉcolePlus</div>
-    <div class="cercle c1"></div>
-    <div class="cercle c2"></div>
-    <div class="login-texte">
-      <h2>L’école,<br>simplement.</h2>
-      <p>Une gestion fiable, même lorsque la connexion ne l’est pas.</p>
-    </div>
-  </div>
-  <div class="login-droite">
-    <div class="login-box">
-      <h1>Bienvenue</h1>
-      <p class="muted">Connectez-vous à votre établissement</p>
-      <label>Établissement</label>
-      <p id="login-ecole" class="champ"></p>
-      <label for="login-id">Identifiant</label>
-      <input id="login-id" class="champ" placeholder="Votre identifiant" autocomplete="username">
-      <label for="login-mdp">Mot de passe</label>
-      <input id="login-mdp" class="champ" type="password" placeholder="••••••••" autocomplete="current-password">
-      <button id="login-btn" class="btn">Connexion sécurisée</button>
-      <p id="login-err" class="erreur"></p>
-      <p class="hors-ligne">✓ Vos données restent disponibles hors connexion</p>
-    </div>
-  </div>
-</div>
+  // Tableau de bord
+  EP.vues.accueil = function (conteneur) {
+    var p = EP.DB.param();
+    conteneur.appendChild(UI.h('p', { class: 'muted' }, p.ecole + ' · ' + p.ville + ' · Année ' + p.annee));
+    conteneur.appendChild(UI.h('div', { class: 'grille', style: 'margin-top:12px' }, [
+      UI.carte(EP.DB.compter('eleves'), 'Élèves inscrits'),
+      UI.carte(EP.DB.compter('presences'), 'Présences saisies'),
+      UI.carte(EP.DB.compter('paiements'), 'Paiements'),
+      UI.carte(EP.DB.compter('personnel'), 'Personnel')
+    ]));
+  };
 
-<!-- APPLICATION -->
-<div id="app" class="app cache">
-  <aside id="menu" class="menu"></aside>
-  <div class="voile" onclick="document.getElementById('menu').classList.remove('ouvert')"></div>
-  <main class="main">
-    <header class="top">
-      <button id="btn-menu" class="btn-menu" aria-label="Ouvrir le menu">☰</button>
-      <h2 id="titre"></h2>
-      <input class="recherche" placeholder="Rechercher un élève…" aria-label="Rechercher un élève">
-      <button id="btn-logout" class="avatar" title="Se déconnecter" aria-label="Se déconnecter">MA</button>
-    </header>
-    <section id="vue" class="vue"></section>
-  </main>
-</div>
+  function aller(id) {
+    var page = EP.NAV.find(function (n) { return n.id === id; }) || EP.NAV[0];
+    courant = page.id;
+    UI.$('titre').textContent = page.titre;
+    var vue = UI.$('vue');
+    vue.innerHTML = '';
+    if (typeof EP.vues[page.id] === 'function') EP.vues[page.id](vue);
+    else vue.appendChild(UI.enConstruction(page.titre));
+    construireMenu();
+    UI.$('menu').classList.remove('ouvert');
+  }
 
-<div id="toast" class="toast cache"></div>
+  function construireMenu() {
+    var m = UI.$('menu');
+    var p = EP.DB.param();
+    m.innerHTML = '';
+    m.appendChild(UI.h('div', { class: 'menu-logo' }, [
+      UI.h('img', { src: 'logo.svg', alt: '', class: 'logo-img' }),
+      'ÉcolePlus'
+    ]));
+    m.appendChild(UI.h('div', { class: 'menu-ecole' }, p.ecole + ' ' + p.ville));
+    EP.NAV.forEach(function (n) {
+      m.appendChild(UI.h('a', {
+        class: n.id === courant ? 'actif' : '',
+        onclick: function () { aller(n.id); }
+      }, n.titre));
+    });
+  }
 
-<script src="data.js"></script>
-<script src="ui.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+  function ouvrirApp() {
+    UI.$('login').classList.add('cache');
+    UI.$('app').classList.remove('cache');
+    aller(courant);
+  }
+
+  function seConnecter() {
+    var p = EP.DB.param();
+    var id = UI.$('login-id').value.trim();
+    var mdp = UI.$('login-mdp').value;
+    if (id === p.login && mdp === p.mdp) {
+      sessionStorage.setItem('ep_session', '1');
+      UI.$('login-err').textContent = '';
+      ouvrirApp();
+    } else {
+      UI.$('login-err').textContent = 'Identifiant ou mot de passe incorrect.';
+    }
+  }
+
+  function demarrer() {
+    var p = EP.DB.param();
+    UI.$('login-ecole').textContent = p.ecole + ' — ' + p.ville;
+    UI.$('login-btn').onclick = seConnecter;
+    UI.$('login-mdp').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') seConnecter();
+    });
+    UI.$('btn-menu').onclick = function () { UI.$('menu').classList.toggle('ouvert'); };
+    UI.$('btn-logout').onclick = function () {
+      sessionStorage.removeItem('ep_session');
+      location.reload();
+    };
+    if (sessionStorage.getItem('ep_session') === '1') ouvrirApp();
+  }
+
+  demarrer();
+})();
