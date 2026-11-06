@@ -2,16 +2,15 @@
 window.EP = { vues: {}, UI: {} };
 
 EP.NAV = [
-  { id: 'accueil',       titre: 'Tableau de bord',  icone: '🏠' },
-  { id: 'eleves',        titre: 'Élèves',           icone: '🎓' },
-  { id: 'classes',       titre: 'Classes',          icone: '🏫' },
-  { id: 'presences',     titre: 'Présences',        icone: '✅' },
-  { id: 'notes',         titre: 'Notes & bulletins',icone: '📝' },
-  { id: 'finances',      titre: 'Finances',         icone: '💰' },
-  { id: 'personnel',     titre: 'Personnel',        icone: '👥' },
-  { id: 'communication', titre: 'Communication',    icone: '💬' },
-  { id: 'rapports',      titre: 'Rapports',         icone: '📊' },
-  { id: 'parametres',    titre: 'Paramètres',       icone: '⚙️' }
+  { id: 'accueil',       titre: 'Tableau de bord' },
+  { id: 'eleves',        titre: 'Élèves' },
+  { id: 'presences',     titre: 'Présences' },
+  { id: 'classes',       titre: 'Classes' },
+  { id: 'notes',         titre: 'Notes' },
+  { id: 'finances',      titre: 'Finances' },
+  { id: 'communication', titre: 'Communication' },
+  { id: 'rapports',      titre: 'Rapports' },
+  { id: 'parametres',    titre: 'Paramètres' }
 ];
 
 EP.COLLECTIONS = ['eleves', 'classes', 'presences', 'notes', 'paiements', 'personnel', 'messages'];
